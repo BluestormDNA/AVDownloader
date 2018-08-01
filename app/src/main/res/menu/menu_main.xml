@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.exemple.eac2_2017s1.MainActivity">
+    <item
+        android:id="@+id/action_bookmark"
+        android:icon="@drawable/ic_action_star_white"
+        android:showAsAction="ifRoom"
+        android:title="bookmark" />
+    <item
+        android:id="@+id/action_search"
+        android:icon="?android:attr/actionModeWebSearchDrawable"
+        android:title="search"
+        android:actionViewClass="android.widget.SearchView"
+        android:showAsAction="ifRoom" />
+</menu>

@@ -34,7 +34,7 @@ dependencies {
     // jsoup HTML parser library @ https://jsoup.org/
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.23.4"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.24.0'
     //glide
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     //
@@ -43,5 +43,5 @@ dependencies {
     //
     //implementation 'org.apache.commons:commons-text:1.4'
     //
-    implementation "org.jetbrains.anko:anko-sqlite:0.10.5"
+    implementation 'org.jetbrains.anko:anko-sqlite:0.10.5'
 }

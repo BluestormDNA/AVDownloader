@@ -7,7 +7,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import android.widget.SearchView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
@@ -80,7 +79,7 @@ class MainActivity : Activity() {
             recyclerView.adapter.notifyDataSetChanged()
             progressBar.visibility = View.GONE
         }
-        
+
     }
 }
 

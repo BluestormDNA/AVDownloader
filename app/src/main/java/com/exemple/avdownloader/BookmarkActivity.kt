@@ -27,7 +27,7 @@ class BookmarkActivity : Activity() {
         launch(UI) {
             progressBar.visibility = View.VISIBLE
             list.clear()
-            list.addAll(async { applicationContext.database.getAnimeList() }.await())
+            list.addAll(async { database.getAnimeList() }.await())
             recyclerView.adapter.notifyDataSetChanged()
             progressBar.visibility = View.GONE
         }

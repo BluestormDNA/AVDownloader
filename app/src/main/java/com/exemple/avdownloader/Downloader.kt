@@ -38,14 +38,14 @@ class Downloader(val context: Context) {
 
     private fun downloadFile(e: Episode, v: String?) {
         val downloadManager = context.getSystemService(Activity.DOWNLOAD_SERVICE) as DownloadManager
-        val request = DownloadManager.Request(Uri.parse(v))
+        val request = DownloadManager.Request(Uri.parse(v)).apply {
+            allowScanningByMediaScanner()
+            setTitle(e.name)
+            setDescription(e.num)
+            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${e.name} ${e.num}$MP4_EXT")
+        }
 
-        request.allowScanningByMediaScanner()
-        request.setTitle(e.name)
-        request.setDescription(e.num)
-
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${e.name} ${e.num}$MP4_EXT")
         val enqueue = downloadManager.enqueue(request)
         //enqueue
     }

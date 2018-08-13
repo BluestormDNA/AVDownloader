@@ -66,7 +66,7 @@ class MainActivity : Activity() {
                 val intent = Intent(this, BookmarkActivity::class.java)
                 this.startActivity(intent)
             }
-        //R.id.action_search -> search()
+            //R.id.action_search -> search()
         }
         return true
     }

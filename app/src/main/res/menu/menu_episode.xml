@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_subscribeUpdates"
+        android:icon="@drawable/ic_action_subscribe_updates"
+        android:showAsAction="ifRoom"
+        android:title="search" />
+    <item
+        android:id="@+id/action_massDownload"
+        android:icon="@drawable/ic_action_mass_download"
+        android:showAsAction="ifRoom"
+        android:title="bookmark" />
+</menu>

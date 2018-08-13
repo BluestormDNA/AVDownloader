@@ -1,12 +1,11 @@
 package com.exemple.avdownloader
 
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_layout.view.*
-import android.content.Intent
-import android.database.sqlite.SQLiteException
 
 class CustomAdapter(val list: ArrayList<Show>) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 

@@ -6,13 +6,14 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_episode_list.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import org.jsoup.Jsoup
-import java.nio.charset.Charset
 
 class EpisodeListActivity : Activity() {
 
@@ -74,6 +75,29 @@ class EpisodeListActivity : Activity() {
             list.add(Episode(id.toInt(), name, num, url, img))
         }
         return list
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_episode, menu)
+        return true
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_massDownload -> massDownload()
+            R.id.action_subscribeUpdates -> subscribeUpdates()
+        }
+        return true
+    }
+
+    private fun massDownload() {
+        TODO("not implemented") //something with list
+    }
+
+    private fun subscribeUpdates() {
+        TODO("not implemented") //WorkManager crazyness
     }
 
     private fun askPermissions() {

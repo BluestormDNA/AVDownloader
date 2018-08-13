@@ -32,4 +32,5 @@ class BookmarkActivity : Activity() {
             progressBar.visibility = View.GONE
         }
     }
+
 }

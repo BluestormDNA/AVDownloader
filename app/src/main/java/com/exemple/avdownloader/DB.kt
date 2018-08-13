@@ -100,6 +100,10 @@ class MyDatabaseOpenHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "MyDatab
             else -> false
         }
     }
+
+    fun subscribeAnime(s: Show) {
+
+    }
 }
 
 // Access property for Context

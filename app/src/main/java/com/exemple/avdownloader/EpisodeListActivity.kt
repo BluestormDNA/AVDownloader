@@ -18,6 +18,7 @@ import org.jsoup.Jsoup
 class EpisodeListActivity : Activity() {
 
     private val list = ArrayList<Episode>()
+    private lateinit var show: Show
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +27,7 @@ class EpisodeListActivity : Activity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = CustomAdapterEpisode(list)
 
-        val show = intent.getParcelableExtra("item") as Show
+        show = intent.getParcelableExtra("item") as Show
 
         askPermissions()
 
@@ -93,11 +94,18 @@ class EpisodeListActivity : Activity() {
     }
 
     private fun massDownload() {
-        TODO("not implemented") //something with list
+        //todo put a visual warning dialog or something with number of files to download
+        //todo probably revamp e.url date hack cleanup
+        //todo is next ep date unnecesary if theres subscribe?
+        //todo put it on other place? outside the list? on actionBar?
+        for (e in list) when {
+            e.url != null -> Downloader(this).handleDownload(e)
+        }
     }
 
     private fun subscribeUpdates() {
-        TODO("not implemented") //WorkManager crazyness
+        this.database.subscribeAnime(show)
+        //todo work manager madness
     }
 
     private fun askPermissions() {

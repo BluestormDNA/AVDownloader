@@ -52,6 +52,7 @@ class Downloader(val context: Context) {
 
     fun handleDownload(e: Episode) {
         launch(UI) {
+            println(e.url)
             val v = async { parseVideoIndex(e.url) }.await()
             downloadFile(e, v)
         }

@@ -5,6 +5,7 @@ import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -14,25 +15,28 @@ import org.jsoup.Jsoup
 class Downloader(val context: Context) {
 
     private fun parseVideoIndex(url: String?): String? {
-        println(url)
-        val doc = Jsoup.connect(url).get().html()
+        Log.d("DEBUG", url)
 
-        val regex = "video\\[\\d]\\s=\\s\\'<iframe.+?src=\"(.+?server=rv.+?)\"".toRegex()
-        val html = regex.find(doc)?.groupValues?.get(1)
-        //Log.d("DEBUG", html)
+        val urlHTML = Jsoup.connect(url).get().html()
+        val regexRVServer = "video\\[\\d]\\s=\\s\\'<iframe.+?src=\"(.+?server=rv.+?)\"".toRegex()
+        val rvRedirectorURL = regexRVServer.find(urlHTML)?.groupValues?.get(1)
+        Log.d("DEBUG", rvRedirectorURL)
 
-        val docV = Jsoup.connect(html).get().html()
-
+        val rvRedirectorHTML = Jsoup.connect(rvRedirectorURL).get().html()
         val reg = "window.location.href = \"(.*)\";".toRegex()
-        val vLink = reg.find(docV)?.groupValues?.get(1)
-        //Log.d("DEBUG", vLink)
+        val rvURL = reg.find(rvRedirectorHTML)?.groupValues?.get(1)
+        Log.d("DEBUG", rvURL)
 
-        val vHtml = Jsoup.connect(vLink).get().html()
-        //Log.d("DEBUG", vHtml)
-        val r = "<source src=\"(.*)\" type".toRegex()
+        val rvHTML = Jsoup.connect(rvURL).get().html()
+        val regexRVMain = "<link rel=\"canonical\" href=\"(.*)\"> ".toRegex()
+        val rvCanonicalURL = regexRVMain.find(rvHTML)?.groupValues?.get(1)
+        Log.d("DEBUG", rvCanonicalURL)
 
-        val v = r.find(vHtml)?.groupValues?.get(1)
-        //Log.d("DEBUG", v)
+        val vHTML = Jsoup.connect(rvCanonicalURL).get().html()
+        val regexV = "<source src=\"(.*)\" type=\"video/mp4\"".toRegex()
+        val v = regexV.find(vHTML)?.groupValues?.get(1)
+        Log.d("DEBUG", v)
+
         return v
     }
 
@@ -52,7 +56,6 @@ class Downloader(val context: Context) {
 
     fun handleDownload(e: Episode) {
         launch(UI) {
-            println(e.url)
             val v = async { parseVideoIndex(e.url) }.await()
             downloadFile(e, v)
         }

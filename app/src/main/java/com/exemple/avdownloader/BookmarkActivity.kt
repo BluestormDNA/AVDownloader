@@ -5,9 +5,8 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import kotlinx.android.synthetic.main.activity_episode_list.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.android.Main
 
 class BookmarkActivity : Activity() {
 
@@ -24,11 +23,11 @@ class BookmarkActivity : Activity() {
     }
 
     private fun update() {
-        launch(UI) {
+        GlobalScope.launch(Dispatchers.Main) {
             progressBar.visibility = View.VISIBLE
             list.clear()
-            list.addAll(async { database.getAnimeList() }.await())
-            recyclerView.adapter.notifyDataSetChanged()
+            list.addAll(async(Dispatchers.IO) { database.getAnimeList() }.await())
+            recyclerView.adapter!!.notifyDataSetChanged()
             progressBar.visibility = View.GONE
         }
     }

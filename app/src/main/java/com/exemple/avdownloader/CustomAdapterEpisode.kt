@@ -43,7 +43,8 @@ class CustomAdapterEpisode(val list: ArrayList<Episode>) : RecyclerView.Adapter<
         override fun onClick(v: View) {
             when (v) {
                 itemView.imageViewRibbon -> { }
-                else -> Downloader(v.context).handleDownload(list[adapterPosition])
+                else -> //Downloader(v.context).handleDownload(list[adapterPosition])
+                    v.context.downloader.handleDownload(list[adapterPosition])
             }
             if (!itemView.context.database.isClicked(list[adapterPosition])) {
                 v.context.database.insertEpisode(list[adapterPosition])

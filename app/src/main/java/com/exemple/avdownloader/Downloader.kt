@@ -6,59 +6,72 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.android.Main
 import org.jsoup.Jsoup
 
-//TODO refactor an unique Download manager?
 class Downloader(val context: Context) {
 
+    companion object {
+        private var instance: Downloader? = null
+
+        @Synchronized
+        fun getInstance(ctx: Context): Downloader {
+            if (instance == null) {
+                instance = Downloader(ctx.applicationContext)
+            }
+            return instance!!
+        }
+    }
+
     private fun parseVideoIndex(url: String?): String? {
-        Log.d("DEBUG", url)
+        Log.d("Main URL", url)
 
         val urlHTML = Jsoup.connect(url).get().html()
         val regexRVServer = "video\\[\\d]\\s=\\s\\'<iframe.+?src=\"(.+?server=rv.+?)\"".toRegex()
         val rvRedirectorURL = regexRVServer.find(urlHTML)?.groupValues?.get(1)
-        Log.d("DEBUG", rvRedirectorURL)
+        Log.d("RV Redirector", rvRedirectorURL)
 
         val rvRedirectorHTML = Jsoup.connect(rvRedirectorURL).get().html()
         val reg = "window.location.href = \"(.*)\";".toRegex()
         val rvURL = reg.find(rvRedirectorHTML)?.groupValues?.get(1)
-        Log.d("DEBUG", rvURL)
+        Log.d("RV URL", rvURL)
 
         val rvHTML = Jsoup.connect(rvURL).get().html()
-        val regexRVMain = "<link rel=\"canonical\" href=\"(.*)\"> ".toRegex()
+        val regexRVMain = "<link rel=\"canonical\" href=\"(.*)\"".toRegex()
         val rvCanonicalURL = regexRVMain.find(rvHTML)?.groupValues?.get(1)
-        Log.d("DEBUG", rvCanonicalURL)
+        Log.d("RV Canonical URL", rvCanonicalURL)
 
         val vHTML = Jsoup.connect(rvCanonicalURL).get().html()
         val regexV = "<source src=\"(.*)\" type=\"video/mp4\"".toRegex()
         val v = regexV.find(vHTML)?.groupValues?.get(1)
-        Log.d("DEBUG", v)
+        Log.d("V", v)
 
         return v
     }
 
-    private fun downloadFile(e: Episode, v: String?) {
+    private fun downloadFile(name: String, num: String, url: String) {
         val downloadManager = context.getSystemService(Activity.DOWNLOAD_SERVICE) as DownloadManager
-        val request = DownloadManager.Request(Uri.parse(v)).apply {
+        val request = DownloadManager.Request(Uri.parse(url)).apply {
             allowScanningByMediaScanner()
-            setTitle("${e.name} ${e.num}")
+            setTitle("${name} ${num}")
             //setDescription(e.num)
             setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${e.name} ${e.num}$MP4_EXT")
+            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${name} ${num}$MP4_EXT")
         }
 
         val enqueue = downloadManager.enqueue(request)
-        //enqueue
+        Log.d("Dowloader Instance", this.toString())
     }
 
     fun handleDownload(e: Episode) {
-        launch(UI) {
-            val v = async { parseVideoIndex(e.url) }.await()
-            downloadFile(e, v)
+        GlobalScope.launch(Dispatchers.Main) {
+            val url = async(Dispatchers.IO) { parseVideoIndex(e.url) }.await()!!
+            downloadFile(e.name, e.num, url)
         }
     }
-
 }
+
+// Access property for Context
+val Context.downloader: Downloader
+    get() = Downloader.getInstance(applicationContext)

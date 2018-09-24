@@ -10,9 +10,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_episode_list.*
+import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
 import org.jsoup.Jsoup
 
 class EpisodeListActivity : Activity() {
@@ -35,11 +35,11 @@ class EpisodeListActivity : Activity() {
     }
 
     private fun update(url: String) {
-        launch(UI) {
+        GlobalScope.launch(Dispatchers.Main) {
             progressBar.visibility = View.VISIBLE
             list.clear()
-            list.addAll(async { parseIndex(url) }.await())
-            recyclerView.adapter.notifyDataSetChanged()
+            list.addAll(async(Dispatchers.IO) { parseIndex(url) }.await())
+            recyclerView.adapter!!.notifyDataSetChanged()
             progressBar.visibility = View.GONE
         }
     }
@@ -99,7 +99,7 @@ class EpisodeListActivity : Activity() {
         //todo is next ep date unnecesary if theres subscribe?
         //todo put it on other place? outside the list? on actionBar?
         for (e in list) when {
-            e.url != null -> Downloader(this).handleDownload(e)
+            e.url != null -> application.downloader.handleDownload(e)
         }
     }
 

@@ -9,9 +9,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
 import org.jsoup.Jsoup
 
 class MainActivity : Activity() {
@@ -72,11 +72,11 @@ class MainActivity : Activity() {
     }
 
     private fun update(url: String) {
-        launch(UI) {
+        GlobalScope.launch(Dispatchers.Main) {
             progressBar.visibility = View.VISIBLE
             list.clear()
-            list.addAll(async { parseIndex(url) }.await())
-            recyclerView.adapter.notifyDataSetChanged()
+            list.addAll(async(Dispatchers.Default) { parseIndex(url) }.await())
+            recyclerView.adapter!!.notifyDataSetChanged()
             progressBar.visibility = View.GONE
         }
 

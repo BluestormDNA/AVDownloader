@@ -3,9 +3,14 @@ Anime Video Downloader
 
 An anime video downloader I wrote on Android Studio to learn Kotlin, coroutines and anko.
 
+This is a WIP project and can be broken on many parts.
+
 Lists anime series, keeps a record of bookmarks and episodes seen using Anko/sqlite.
 
-Main URL not provided.
+TODO: Subscribe to anime series to auto download on new chapter releases
+TODO: Check if series is finalized
+
+Main URL not provided (sorry).
 
 ![screenshot_1538074513](https://user-images.githubusercontent.com/28767885/46168258-3718f480-c298-11e8-993c-ea236d7b0ab0.png)
 ![screenshot_1538074505](https://user-images.githubusercontent.com/28767885/46168259-3718f480-c298-11e8-88de-c1ebd79f41ef.png)
